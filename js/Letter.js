@@ -34,6 +34,7 @@ customElements.define('wf-letter', class extends HTMLElement  {
         styles.textContent = //css
         `
             :host {
+                --font: var(--wf-font, monospace);
                 --background: floralwhite;
             }
             :host([selected]), 
@@ -46,13 +47,13 @@ customElements.define('wf-letter', class extends HTMLElement  {
 
             button {
                 color: black;
-                font-family: monospace;
+                font-family: var(--font);
+                font-size: 2em;
                 text-transform: uppercase;
                 font-weight: bold;
                 text-align: center;
                 inline-size: 2em;
                 block-size: 2em;
-                font-size: 2em;
                 background: var(--background);
                 border-radius: .15em;
                 border: .075em solid #8882;
@@ -66,18 +67,4 @@ customElements.define('wf-letter', class extends HTMLElement  {
             `;
         return styles.cloneNode(true);
     }
-
-
-    connectedCallback() {
-        let button = this.shadowRoot.querySelector("button")
-        button.addEventListener("click", () => {
-            this.dispatchEvent(this._createEvent());
-        });
-    }
-
-    _createEvent() {
-        return new CustomEvent("wf-letter-interaction", { bubbles: true });
-    }
-
-
 });

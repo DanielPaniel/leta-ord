@@ -4,7 +4,7 @@ customElements.define('wf-game-board', class extends HTMLElement  {
     constructor() {
         super();
 
-        this._dimension = 8;
+        this._dimension = 7;
 
         this.attachShadow({mode: "open"});
         let shadow = this.shadowRoot;
@@ -20,8 +20,8 @@ customElements.define('wf-game-board', class extends HTMLElement  {
         let template = document.createElement("template");
         template.innerHTML = // html
         `
-        <slot></slot>
         <div class="board"></div>
+        <slot></slot>
         `;
         return template.content.cloneNode(true);
     }
@@ -50,7 +50,6 @@ customElements.define('wf-game-board', class extends HTMLElement  {
 
     connectedCallback() {
         this._setup();
-        this._addListeners();
     }
 
     async _setup() {
@@ -67,12 +66,38 @@ customElements.define('wf-game-board', class extends HTMLElement  {
                 }
                 boardElement.append(letter);
             });
-        });    
+        });  
+        this._addListeners();  
     }
 
     _addListeners() {
-        this.shadowRoot.querySelector(".board").addEventListener("wf-letter-interaction", (event) => {
-            this._setSelected(event.target);
+        let allLetters = this.shadowRoot.querySelectorAll("wf-letter");
+        let board = this.shadowRoot.querySelector(".board");
+        let isMouseDown = false;
+
+        // Verify interaction has begun
+        board.addEventListener("mousedown", () => {
+            isMouseDown = true;
+        });
+
+        // Stop interaction and evaluate selection
+        board.addEventListener("mouseup", () => {
+            isMouseDown = false;
+            this._checkClearStatus();
+        });
+
+        allLetters.forEach((letter) => {
+            // Letter where interaction starts
+            letter.addEventListener("mousedown", () => {
+                this._setSelected(letter);
+            });
+
+            // Letters which are selected with a "swipe/drag"
+            letter.addEventListener("mouseenter", () => {
+                if (isMouseDown) {
+                    this._setSelected(letter);
+                }
+            });
         });
     }
 
@@ -82,7 +107,6 @@ customElements.define('wf-game-board', class extends HTMLElement  {
         } else {
             letterElement.setAttribute("selected", "");
         }
-        this._checkClearStatus();
     }
 
     _checkClearStatus() {

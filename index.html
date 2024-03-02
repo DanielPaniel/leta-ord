@@ -5,11 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Ord</title>
         <style>
+            :root {
+                --wf-font: monospace;
+            }
             #wordfind {
                 display: grid;
                 grid-template-columns: repeat(15, 1fr);
                 gap: .15em;
                 width: fit-content;
+            }
+
+            ol {
+                display: flex;
+                flex-flow: row wrap;
+                gap: 1em;
+                list-style-position: inside;
+                margin-block: 1em;
+                padding: 0;
+            }
+
+            li {
+                color: black;
+                font-family: var(--wf-font);
+                font-size: 1.5em;
+                text-transform: uppercase;
+                font-weight: bold;
+                margin: 0;
+                padding: 0;
+
             }
         </style>
 
