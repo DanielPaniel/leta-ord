@@ -3,7 +3,7 @@ Markera bokstäver i korsord
 //    - Feedback när man har rätt ord
 // Fyll på med slumpmässiga bokstäver
 
-- git så man kan ångra sig..
+// - git så man kan ångra sig..
 
 - Markera med drag
     - På mousedown och move - Markera
