@@ -1,0 +1,34 @@
+Markera bokstäver i korsord
+//    - Toggla markering på alla bokstäver
+//    - Feedback när man har rätt ord
+// Fyll på med slumpmässiga bokstäver
+
+- git så man kan ångra sig..
+
+- Markera med drag
+    - På mousedown och move - Markera
+    - På mouse up - evaluera
+        - på fel: avmarkera
+        - på rätt: rättmarkera
+
+Ange ord
+    - En default ordlista som man kan slumpa ur om man inte vill skriva själv
+    - Välj tema
+    - Visa inputs på sidladdning
+    - "Skicka" och gå till nästa steg med gridet
+
+Visa ord
+    - Bestäm höjd/bredd
+    - Generera "korsord"
+    - Visa vilka ord som ska hittas
+
+- Bocka av ord som man hittat
+
+
+
+
+
+Idéer:
+- Begränsa tecken i input till bokstäver och inte space?!
+- Spara i localhost!
+- Bestäm dimensioner beroende på skärm

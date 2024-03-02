@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Ord</title>
+        <style>
+            #wordfind {
+                display: grid;
+                grid-template-columns: repeat(15, 1fr);
+                gap: .15em;
+                width: fit-content;
+            }
+        </style>
+
+        <script src="./js/Letter.js"></script>
+        <script src="./js/GameBoard.js"></script>
+    </head>
+    <body>
+        <div id="wordfind"></div>
+        <wf-game-board>
+            <ol>
+                <li>Fågel</li>
+                <li>Hund</li>
+                <li>Katt</li>
+                <li>Ko</li>
+                <li>Får</li>
+            </ol>
+        </wf-game-board>
+    </body>
+</html>
