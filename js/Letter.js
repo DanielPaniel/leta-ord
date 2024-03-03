@@ -36,6 +36,8 @@ customElements.define('wf-letter', class extends HTMLElement  {
             :host {
                 --font: var(--wf-font, monospace);
                 --background: floralwhite;
+
+                display: block;
             }
             :host([selected]), 
             :host([selected][cleared]) {

@@ -8,47 +8,69 @@
             :root {
                 --wf-font: monospace;
             }
-            #wordfind {
-                display: grid;
-                grid-template-columns: repeat(15, 1fr);
-                gap: .15em;
-                width: fit-content;
-            }
 
-            ol {
+            wf-game-engine {
+                margin: auto;
+            }
+            ul {
                 display: flex;
                 flex-flow: row wrap;
-                gap: 1em;
-                list-style-position: inside;
+                gap: .75em;
                 margin-block: 1em;
                 padding: 0;
+                list-style: none;
             }
-
             li {
                 color: black;
                 font-family: var(--wf-font);
-                font-size: 1.5em;
+                font-size: 1.33em;
                 text-transform: uppercase;
                 font-weight: bold;
                 margin: 0;
                 padding: 0;
-
+                line-height: 1;
+                padding-block: .4em .3em;
+                padding-inline: .75em;
+                background: #eee;
+                border: 1px solid #ccc;
+                border-radius: 1em;
             }
         </style>
 
         <script src="./js/Letter.js"></script>
+        <script src="./js/Wordlist.js"></script>
         <script src="./js/GameBoard.js"></script>
+        <script src="./js/GameEngine.js"></script>
     </head>
     <body>
-        <div id="wordfind"></div>
-        <wf-game-board>
-            <ol>
-                <li>Fågel</li>
-                <li>Hund</li>
-                <li>Katt</li>
-                <li>Ko</li>
-                <li>Får</li>
-            </ol>
-        </wf-game-board>
+        <wf-game-engine>
+            <wf-game-board></wf-game-board>
+            <wf-wordlist name="djur">
+                <ul>
+                    <li>Fågel</li>
+                    <li>Hund</li>
+                    <li>Katt</li>
+                    <li>Ko</li>
+                    <li>Får</li>
+                    <li>Elefant</li>
+                    <li>Apa</li>
+                    <li>Giraff</li>
+                </ul>
+            </wf-wordlist>
+
+            <wf-wordlist name="frukt" selected>
+                <ul>
+                    <li>Annanas</li>
+                    <li>Äpple</li>
+                    <li>Päron</li>
+                    <li>Kiwi</li>
+                    <li>Durian</li>
+                    <li>Banan</li>
+                    <li>Apelsin</li>
+                    <li>Citron</li>
+                </ul>
+            </wf-wordlist>
+        </wf-game-engine>
+
     </body>
 </html>
