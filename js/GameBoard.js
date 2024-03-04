@@ -11,7 +11,7 @@ customElements.define('wf-game-board', class extends HTMLElement  {
         - uppdatera custom prop när attribut sätts
         - göm spelplan om attr saknas - animera in
         */
-        this._dimension = 7;
+        this._dimension = 8;
 
         this.attachShadow({mode: "open"});
         let shadow = this.shadowRoot;
@@ -30,6 +30,8 @@ customElements.define('wf-game-board', class extends HTMLElement  {
         <div class="board">
             <slot></slot>
         </div>
+        <ul class="list">
+        </ul>
         `;
         return template.content.cloneNode(true);
     }
@@ -52,21 +54,47 @@ customElements.define('wf-game-board', class extends HTMLElement  {
                 gap: .15em;
                 width: fit-content;
             }
+            .list {
+                display: flex;
+                flex-flow: row wrap;
+                gap: .75em;
+                margin-block: 1em;
+                padding: 0;
+                list-style: none;
+            }
+            .list li {
+                color: black;
+                font-family: var(--wf-font);
+                font-size: 1.33em;
+                text-transform: uppercase;
+                font-weight: bold;
+                margin: 0;
+                padding: 0;
+                line-height: 1;
+                padding-block: .4em .3em;
+                padding-inline: .75em;
+                background: #eee;
+                border: 1px solid #ccc;
+                border-radius: 1em;
+            }
             `;
         return styles.cloneNode(true);
     }
 
 
     connectedCallback() {
-        this._setup();
+    //    this._setup();
+
+        let slot = this.shadowRoot.querySelector("slot");
+        slot.addEventListener("slotchange", () => {
+            this._setup();
+        });
     }
 
     async _setup() {
-        this._getLetterElements("wf-letter")
-            .then((letterElements) => {
-                this._addListeners(letterElements);
-            });
-        
+        let letterElements = await this._getLetterElements("wf-letter");
+        this._addListeners(letterElements);
+        this._showWordsToFind(letterElements);
     }
 
     _getLetterElements(selector) {
@@ -135,7 +163,7 @@ customElements.define('wf-game-board', class extends HTMLElement  {
 
             if (this._wordIsSelected(selectedLetters.length, lettersInWord.length, selectedLettersInWord)) {
                 this._setCleared(lettersInWord);
-                this.dispatchEvent(this._createEvent(currentWordX));
+                this._markWordInWordlist(currentWordX);
             }
         });
         currentWords[1].forEach((currentWordY) => {
@@ -144,7 +172,7 @@ customElements.define('wf-game-board', class extends HTMLElement  {
 
             if (this._wordIsSelected(selectedLetters.length, lettersInWord.length, selectedLettersInWord)) {
                 this._setCleared(lettersInWord);
-                this.dispatchEvent(this._createEvent(currentWordY));
+                this._markWordInWordlist(currentWordY);
             }
         });
     }
@@ -173,12 +201,39 @@ customElements.define('wf-game-board', class extends HTMLElement  {
         return [wordsX, wordsY];
     }
 
-    _createEvent(clearedWord) {
-        return new CustomEvent("wf-cleared-word", {
-            detail: {
-              word: clearedWord,
+    _showWordsToFind(allLetters) {
+        let words = this._getWordsFromLetters(allLetters).flat();
+        this._shuffleArray(words);
+
+        let uniqueWords = words.filter((word, index) => {
+            return words.indexOf(word) === index;
+        });
+
+        let listElement = this.shadowRoot.querySelector(".list");
+        listElement.innerHTML = "";
+        uniqueWords.forEach((word) => {
+            let listItem = document.createElement("li");
+            listItem.innerHTML = word;
+            listElement.append(listItem.cloneNode(true));
+        });
+    }
+
+    _markWordInWordlist(word) {
+        let wordElements = this.shadowRoot.querySelectorAll("li");
+        wordElements.forEach((wordElement) => {
+            if (wordElement.textContent === word) {
+                wordElement.style.textDecoration = "line-through";
+                wordElement.style.opacity = 0.5;
             }
-          });
+        });
+    }
+
+    _shuffleArray(array) {
+        for (let currentIndex = array.length - 1; currentIndex > 0; currentIndex--) {
+          const randomIndex = Math.floor(Math.random() * (currentIndex + 1));
+          [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+        }
+        return array;
     }
 
 });

@@ -12,29 +12,6 @@
             wf-game-engine {
                 margin: auto;
             }
-            ul {
-                display: flex;
-                flex-flow: row wrap;
-                gap: .75em;
-                margin-block: 1em;
-                padding: 0;
-                list-style: none;
-            }
-            li {
-                color: black;
-                font-family: var(--wf-font);
-                font-size: 1.33em;
-                text-transform: uppercase;
-                font-weight: bold;
-                margin: 0;
-                padding: 0;
-                line-height: 1;
-                padding-block: .4em .3em;
-                padding-inline: .75em;
-                background: #eee;
-                border: 1px solid #ccc;
-                border-radius: 1em;
-            }
         </style>
 
         <script src="./js/Letter.js"></script>
@@ -44,31 +21,267 @@
     </head>
     <body>
         <wf-game-engine>
+            <h1 slot="title">Hitta ord</h1>
             <wf-game-board></wf-game-board>
-            <wf-wordlist name="djur">
+            <wf-wordlist name="djur" selected>
                 <ul>
-                    <li>Fågel</li>
                     <li>Hund</li>
                     <li>Katt</li>
+                    <li>Häst</li>
+                    <li>Lejon</li>
+                    <li>Tiger</li>
+                    <li>Björn</li>
+                    <li>Varg</li>
+                    <li>Elefant</li>
+                    <li>Giraff</li>
                     <li>Ko</li>
                     <li>Får</li>
-                    <li>Elefant</li>
-                    <li>Apa</li>
-                    <li>Giraff</li>
-                </ul>
+                    <li>Gorilla</li>
+                    <li>Pingvin</li>
+                    <li>Krokodil</li>
+                    <li>Val</li>
+                    <li>Haj</li>
+                    <li>Örn</li>
+                    <li>Fågel</li>
+                    <li>Ödla</li>
+                    <li>Orm</li>
+                    <li>Flodhäst</li>
+                    <li>Gepard</li>
+                    <li>Puma</li>
+                    <li>Myrslok</li>
+                    <li>Noshörning</li>
+                    <li>Koala</li>
+                    <li>Schimpans</li>
+                    <li>Känguru</li>
+                    <li>Älg</li>
+                    <li>Sköldpadda</li>
+                  </ul>
+                  
             </wf-wordlist>
 
-            <wf-wordlist name="frukt" selected>
+            <wf-wordlist name="frukt">
                 <ul>
-                    <li>Annanas</li>
                     <li>Äpple</li>
-                    <li>Päron</li>
-                    <li>Kiwi</li>
-                    <li>Durian</li>
                     <li>Banan</li>
+                    <li>Kiwi</li>
                     <li>Apelsin</li>
+                    <li>Mango</li>
+                    <li>Vindruva</li>
+                    <li>Jordgubbe</li>
+                    <li>Ananas</li>
+                    <li>Päron</li>
+                    <li>Blåbär</li>
+                    <li>Granatäpple</li>
+                    <li>Plommon</li>
+                    <li>Körsbär</li>
+                    <li>Nektarin</li>
+                    <li>Persika</li>
                     <li>Citron</li>
+                    <li>Lime</li>
+                    <li>Aprikos</li>
+                    <li>Melon</li>
+                    <li>Krusbär</li>
+                    <li>Papaya</li>
+                    <li>Klementin</li>
+                    <li>Durian</li>
+                    <li>Kokosnöt</li>
+                    <li>Pomelo</li>
+                    <li>Physalis</li>
+                    <li>Feijoa</li>
+                    <li>Carambola</li>
+                    <li>Rabarber</li>
+                    <li>Kumquat</li>
+                  </ul>
+                  
+            </wf-wordlist>
+
+            <wf-wordlist name="Namn">
+                <ul>
+                    <li>Maria</li>
+                    <li>Elisabeth</li>
+                    <li>Anna</li>
+                    <li>Kristina</li>
+                    <li>Margareta</li>
+                    <li>Eva</li>
+                    <li>Linnéa</li>
+                    <li>Karin</li>
+                    <li>Birgitta</li>
+                    <li>Marie</li>
+                    <li>Ingrid</li>
+                    <li>Sofia</li>
+                    <li>Marianne</li>
+                    <li>Lena</li>
+                    <li>Sara</li>
+                    <li>Karl</li>
+                    <li>Erik</li>
+                    <li>Lars</li>
+                    <li>Anders</li>
+                    <li>Per</li>
+                    <li>Mikael</li>
+                    <li>Johan</li>
+                    <li>Olof</li>
+                    <li>Nils</li>
+                    <li>Jan</li>
+                    <li>Gustav</li>
+                    <li>Hans</li>
+                    <li>Peter</li>
+                    <li>Lennart</li>
+                    <li>Fredrik</li>
+                  </ul>
+            </wf-wordlist>
+
+            <wf-wordlist name="länder">
+                <ul>
+                    <li>Sverige</li>
+                    <li>Norge</li>
+                    <li>Finland</li>
+                    <li>Estland</li>
+                    <li>Island</li>
+                    <li>Irland</li>
+                    <li>Spanien</li>
+                    <li>Portugal</li>
+                    <li>Tyskland</li>
+                    <li>Italien</li>
+                    <li>Österrike</li>
+                    <li>Frankrike</li>
+                    <li>Belgien</li>
+                    <li>Polen</li>
+                    <li>Holland</li>
+                    <li>Ryssland</li>
+                    <li>Lettland</li>
+                    <li>Litauen</li>
+                    <li>Schweiz</li>
+                    <li>Albanien</li>
+                    <li>Kroatien</li>
+                    <li>Serbien</li>
+                    <li>Grekland</li>
+                    <li>Bulgarien</li>
+                    <li>Rumänien</li>
+                    <li>Ungern</li>
+                    <li>Cypern</li>
+                    <li>Moldavien</li>
+                    <li>Malta</li>
+                    <li>Belarus</li>
+                  </ul>                  
+            </wf-wordlist>
+            <wf-wordlist name="färger">
+                <ul>
+                    <li>Röd</li>
+                    <li>Blå</li>
+                    <li>Gul</li>
+                    <li>Grön</li>
+                    <li>Vit</li>
+                    <li>Svart</li>
+                    <li>Orange</li>
+                    <li>Rosa</li>
+                    <li>Lila</li>
+                    <li>Brun</li>
+                    <li>Grå</li>
+                    <li>Beige</li>
+                    <li>Turkos</li>
+                    <li>Indigo</li>
+                    <li>Marinblå</li>
+                    <li>Guld</li>
+                    <li>Silver</li>
+                    <li>Koppar</li>
+                    <li>Magenta</li>
+                    <li>Teal</li>
+                    <li>Cyan</li>
+                  </ul>
+                  
+            </wf-wordlist>
+
+            <wf-wordlist name="Super mario">
+                <ul>
+                    <li>Mario</li>
+                    <li>Luigi</li>
+                    <li>Peach</li>
+                    <li>Bowser</li>
+                    <li>Mushroom</li>
+                    <li>Koopa</li>
+                    <li>Goomba</li>
+                    <li>Yoshi</li>
+                    <li>Toad</li>
+                    <li>Star</li>
+                    <li>Coin</li>
+                    <li>Castle</li>
+                    <li>Block</li>
+                    <li>Tanooki</li>
+                    <li>Lakitu</li>
+                    <li>Thwomp</li>
+                    <li>Boo</li>
+                    <li>Roy</li>
+                    <li>Morton</li>
+                    <li>Ludwig</li>
+                    <li>Lemmy</li>
+                    <li>Larry</li>
+                    <li>Wendy</li>
+                    <li>Iggy</li>
+                    <li>Kamek</li>
+                    <li>Grass</li>
+                    <li>Desert</li>
+                    <li>Pipe</li>
+                    <li>Water</li>
+                    <li>Underground</li>
+                    <li>Sky</li>
+                    <li>Spiny</li>
+                    <li>Firebro</li>
+                    <li>Cappy</li>
+                    <li>Odyssey</li>
+                    <li>Birdo</li>
                 </ul>
+                  
+            </wf-wordlist>
+
+            <wf-wordlist name="Fåglar">
+                <ul>
+                    <li>Talgoxe</li>
+                    <li>Gråsparv</li>
+                    <li>Koltrast</li>
+                    <li>Gräsand</li>
+                    <li>Kaja</li>
+                    <li>Råka</li>
+                    <li>Kråka</li>
+                    <li>Glada</li>
+                    <li>Sothöna</li>
+                    <li>Rörhöna</li>
+                    <li>Fiskmås</li>
+                    <li>Gråtrut</li>
+                    <li>Gärdsmyg</li>
+                    <li>Lärka</li>
+                    <li>Silltrut</li>
+                    <li>Hussvala</li>
+                    <li>Kornknarr</li>
+                    <li>Rödhake</li>
+                    <li>Skata</li>
+                    <li>Trana</li>
+                    <li>Kricka</li>
+                    <li>Sånglärka</li>
+                    <li>Stare</li>
+                    <li>Rödbena</li>
+                    <li>Domherre</li>
+                    <li>Knipa</li>
+                    <li>Vigg</li>
+                    <li>Hökuggla</li>
+                    <li>Rapphöna</li>
+                    <li>Strandskata</li>
+                    <li>Storskrake</li>
+                    <li>Grågås</li>
+                    <li>Blåmes</li>
+                    <li>Skärpiplärka</li>
+                    <li>Tornsvala</li>
+                    <li>Gulsparv</li>
+                    <li>Häger</li>
+                    <li>Skärfläcka</li>
+                    <li>Bläsand</li>
+                    <li>Ormvråk</li>
+                    <li>Sädgås</li>
+                    <li>Strömstare</li>
+                    <li>Grönsiska</li>
+                    <li>Morkulla</li>
+                    <li>Storspov</li>
+                  </ul>
+                  
             </wf-wordlist>
         </wf-game-engine>
 

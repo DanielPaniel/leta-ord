@@ -37,9 +37,6 @@ customElements.define('wf-wordlist', class extends HTMLElement  {
 
                 display: none;
             }
-            :host([selected]) {
-                display: block;
-            }
             `;
         return styles.cloneNode(true);
     }

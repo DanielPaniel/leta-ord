@@ -3,7 +3,8 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
 
     constructor() {
         super();
-        this._dimension = 7;
+        this._dimension = 8;
+        this._maxNbrOfWords = 10;
 
         this.attachShadow({mode: "open"});
         let shadow = this.shadowRoot;
@@ -19,7 +20,17 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
         let template = document.createElement("template");
         template.innerHTML = // html
         `
+        <header>
+            <slot name="title"></slot>
+            <button>Nytt</button>
+        </header>
         <slot></slot>
+        <dialog>
+            <div class="dialog-container">
+                <h2>Nytt spel</h2>
+                <div class="menu"></div>
+            </div>
+        </dialog>
         `;
         return template.content.cloneNode(true);
     }
@@ -36,24 +47,86 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
                 --font: var(--wf-font, monospace);
                 --background: floralwhite;
 
+                font-size: 12px;
                 display: block;
                 width: min-content;
             }
+            header {
+                font-family: var(--font);
 
+                display: flex;
+                padding-block: .5rem;
+            }
+            header button {
+                margin-inline: auto 0;
+                font-family: var(--font);
+                font-weight: bold;
+                font-size: 1em;
+
+            } 
+            ::slotted(h1) {
+                margin: 0;
+                padding: 0;
+                font-size: 1.5em;
+            }
+            dialog {
+                --foreground: #fff;
+                --background: #333;
+
+                font-family: var(--font);
+                font-size: 1em;
+                background: transparent;
+                border: none;
+
+                color: var(--foreground);
+                padding-block: 0;
+                padding-inline: 0;
+                width: min(80vw, 20em);
+            }
+            dialog::backdrop {
+                background: rgba(0,0,0,.5);
+                backdrop-filter: blur(10px);
+            }
+            .dialog-container {
+                padding-block: 1em;
+                padding-inline: 2em;
+                border: 1px solid var(--foreground);
+                border-radius: .2em;
+                background: var(--background);
+            }
+            .menu {
+                display: flex;
+                flex-flow: row wrap;
+                gap: 1em;
+            }
+            .menu button {
+                font-family: var(--font);
+                font-weight: bold;
+                font-size: 1em;
+                background: #fff3;
+                border: 1px solid var(--foreground);
+                color: var(--foreground);
+                text-transform: capitalize;
+                cursor: pointer;
+                padding: .3em .5em;
+                border-radius: .2em;
+            }
             `;
         return styles.cloneNode(true);
     }
 
     connectedCallback() {
         this._setup();
+        this._setupDialogMenu();
     }
 
     async _setup() {
-        let words = await this._getWordElements("wf-wordlist[selected] li")
+        let words = await this._getElementsFromLightDom("wf-wordlist[selected] li")
             .then((elements) => this._parseWords(elements));
-        let letters = this._generateBoard(words);
+        let letters = this._generateBoard(this._shuffleArray(words));
         
         let boardElement = this.querySelector("wf-game-board");
+        boardElement.innerHTML = "";
         letters.forEach((row) => {
             row.forEach((letter) => {
                 if (letter.textContent === "-") {
@@ -62,28 +135,51 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
                 boardElement.append(letter);
             });
         });
-        boardElement.addEventListener("wf-cleared-word", (event) => {
-            this._markWordInWordlist(event.detail.word);
+
+    }
+
+    async _createWordlistMenu() {
+        let lists = await this._getElementsFromLightDom("wf-wordlist");
+        let dialog = this.shadowRoot.querySelector("dialog");
+        let menuElement = this.shadowRoot.querySelector(".menu");
+        lists.forEach((list) => {
+            let button = document.createElement("button");
+            let wordlistName = list.getAttribute("name");
+            button.innerHTML = wordlistName;
+            button.addEventListener("click", () => {
+                this._selectWordlist(lists, wordlistName);
+                dialog.close();
+                this._setup();
+            });
+            menuElement.append(button);
         });
     }
 
-    /* TODO:
-        - Kanske gömma ordlistorna alltid
-        - Plocka ut ord inne i board (_getWordsFromLetters) och skriva ut en ny lista
-        - Sköta avbockning inne i board - slippa eventet
-        - Flytta style till shadowDomen fr index
-    */
-   async  _markWordInWordlist(word) {
-        let wordElements = await this._getWordElements("wf-wordlist[selected] li");
-        wordElements.forEach((wordElement) => {
-            if (wordElement.textContent === word) {
-                wordElement.style.textDecoration = "line-through";
-                wordElement.style.opacity = 0.5;
+    _setupDialogMenu() {
+        this._createWordlistMenu();
+        let dialog = this.shadowRoot.querySelector("dialog");
+        let menuButton = this.shadowRoot.querySelector("header button");
+        menuButton.addEventListener("click", () => {
+            dialog.showModal();
+        });
+        dialog.addEventListener("click", (event) => {
+            if (event.target === dialog) {
+                dialog.close();
+            }
+        });
+
+    }
+
+    _selectWordlist(lists, nameOfSelectedList) {
+        lists.forEach((list) => {
+            list.removeAttribute("selected");
+            if (list.getAttribute("name") === nameOfSelectedList) {
+                list.setAttribute("selected", "");
             }
         });
     }
 
-    _getWordElements(selector) {
+    _getElementsFromLightDom(selector) {
         return new Promise((resolve, reject) => {
           const interval = setInterval(() => {
             let elements = this.querySelectorAll(selector);
@@ -104,7 +200,11 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
     _parseWords(elements) {
         let words = [];
         elements.forEach((wordElement) => {
-            words.push(wordElement.textContent)
+            let word = wordElement.textContent;
+            // Ta bort för långa ord
+            if (word.length <= this._dimension) {
+                words.push(word);
+            }
         });
         return words;
     }
@@ -121,7 +221,7 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
 
         // Placera in orden i korsordet
         let placedWords = 0;
-        for (let i = 0; i < words.length && placedWords < words.length; i++) {
+        for (let i = 0; i < words.length && placedWords <  this._maxNbrOfWords; i++) {
             const word = words[i];
             const length = words[i].length;
             const direction = Math.random() < 0.5 ? "across" : "down";
@@ -134,17 +234,9 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
                 x = Math.floor(Math.random() * this._dimension);
                 y = Math.floor(Math.random() * (this._dimension - length));
             }
-
             if (this._canPlaceWord(board, word, x, y, direction)) {
                 this._placeWord(board, word, x, y, direction);
                 placedWords++;
-            } else {
-
-                // Gör ett nytt försök att placera ut ord, 
-                // TODO:
-                // borde kanske finnas ett tak för hur många försök..? / D
-                // Kanske en timeout och set interval som i promisen?
-             //   i--;
             }
         }
 
@@ -154,7 +246,6 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
     // Hjälpfunktion för att kontrollera om ett ord kan placeras
     _canPlaceWord(board, word, x, y, direction) {
         const length = word.length;
-
         if (direction === "across") {
             if (x + length > this._dimension) return false;
             for (let i = 0; i < length; i++) {
@@ -211,5 +302,13 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
         const chars = "abcdefghijklmnopqrstuvwxyzåäö";
         const index = Math.floor(Math.random() * chars.length);
         return chars.charAt(index);          
+    }
+
+    _shuffleArray(array) {
+        for (let currentIndex = array.length - 1; currentIndex > 0; currentIndex--) {
+          const randomIndex = Math.floor(Math.random() * (currentIndex + 1));
+          [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+        }
+        return array;
     }
 });
