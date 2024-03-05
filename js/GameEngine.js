@@ -20,17 +20,7 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
         let template = document.createElement("template");
         template.innerHTML = // html
         `
-        <header>
-            <slot name="title"></slot>
-            <button>Nytt</button>
-        </header>
-        <slot></slot>
-        <dialog>
-            <div class="dialog-container">
-                <h2>Nytt spel</h2>
-                <div class="menu"></div>
-            </div>
-        </dialog>
+            <slot></slot>
         `;
         return template.content.cloneNode(true);
     }
@@ -51,65 +41,9 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
                 display: block;
                 width: min-content;
             }
-            header {
-                font-family: var(--font);
 
-                display: flex;
-                padding-block: .5rem;
-            }
-            header button {
-                margin-inline: auto 0;
-                font-family: var(--font);
-                font-weight: bold;
-                font-size: 1em;
-
-            } 
-            ::slotted(h1) {
-                margin: 0;
-                padding: 0;
-                font-size: 1.5em;
-            }
-            dialog {
-                --foreground: #fff;
-                --background: #333;
-
-                font-family: var(--font);
-                font-size: 1em;
-                background: transparent;
-                border: none;
-
-                color: var(--foreground);
-                padding-block: 0;
-                padding-inline: 0;
-                width: min(80vw, 20em);
-            }
-            dialog::backdrop {
-                background: rgba(0,0,0,.5);
-                backdrop-filter: blur(10px);
-            }
-            .dialog-container {
-                padding-block: 1em;
-                padding-inline: 2em;
-                border: 1px solid var(--foreground);
-                border-radius: .2em;
-                background: var(--background);
-            }
-            .menu {
-                display: flex;
-                flex-flow: row wrap;
-                gap: 1em;
-            }
-            .menu button {
-                font-family: var(--font);
-                font-weight: bold;
-                font-size: 1em;
-                background: #fff3;
-                border: 1px solid var(--foreground);
-                color: var(--foreground);
-                text-transform: capitalize;
-                cursor: pointer;
-                padding: .3em .5em;
-                border-radius: .2em;
+            ::slotted(ul) {
+                display: none;
             }
             `;
         return styles.cloneNode(true);
@@ -117,11 +51,10 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
 
     connectedCallback() {
         this._setup();
-        this._setupDialogMenu();
     }
 
     async _setup() {
-        let words = await this._getElementsFromLightDom("wf-wordlist[selected] li")
+        let words = await this._getElementsFromLightDom("ul[data-wf-wordlist] li")
             .then((elements) => this._parseWords(elements));
         let letters = this._generateBoard(this._shuffleArray(words));
         
@@ -136,47 +69,6 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
             });
         });
 
-    }
-
-    async _createWordlistMenu() {
-        let lists = await this._getElementsFromLightDom("wf-wordlist");
-        let dialog = this.shadowRoot.querySelector("dialog");
-        let menuElement = this.shadowRoot.querySelector(".menu");
-        lists.forEach((list) => {
-            let button = document.createElement("button");
-            let wordlistName = list.getAttribute("name");
-            button.innerHTML = wordlistName;
-            button.addEventListener("click", () => {
-                this._selectWordlist(lists, wordlistName);
-                dialog.close();
-                this._setup();
-            });
-            menuElement.append(button);
-        });
-    }
-
-    _setupDialogMenu() {
-        this._createWordlistMenu();
-        let dialog = this.shadowRoot.querySelector("dialog");
-        let menuButton = this.shadowRoot.querySelector("header button");
-        menuButton.addEventListener("click", () => {
-            dialog.showModal();
-        });
-        dialog.addEventListener("click", (event) => {
-            if (event.target === dialog) {
-                dialog.close();
-            }
-        });
-
-    }
-
-    _selectWordlist(lists, nameOfSelectedList) {
-        lists.forEach((list) => {
-            list.removeAttribute("selected");
-            if (list.getAttribute("name") === nameOfSelectedList) {
-                list.setAttribute("selected", "");
-            }
-        });
     }
 
     _getElementsFromLightDom(selector) {

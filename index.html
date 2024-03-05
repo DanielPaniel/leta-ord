@@ -8,9 +8,71 @@
             :root {
                 --wf-font: monospace;
             }
-
-            wf-game-engine {
+            main {
+                width: min-content;
                 margin: auto;
+            }
+
+            header {
+                font-family: var(--wf-font);
+
+                display: flex;
+                padding-block: .5rem;
+            }
+            header button {
+                margin-inline: auto 0;
+                font-family: var(--wf-font);
+                font-weight: bold;
+                font-size: 1em;
+
+            } 
+            h1 {
+                margin: 0;
+                padding: 0;
+                font-size: 1.5em;
+            }
+
+            dialog {
+                --foreground: #fff;
+                --background: #333;
+
+                font-family: var(--wf-font);
+                font-size: 1em;
+                background: transparent;
+                border: none;
+
+                color: var(--foreground);
+                padding-block: 0;
+                padding-inline: 0;
+                width: min(80vw, 20em);
+            }
+            dialog::backdrop {
+                background: rgba(0,0,0,.5);
+                backdrop-filter: blur(10px);
+            }
+            .dialog-container {
+                padding-block: 1em;
+                padding-inline: 2em;
+                border: 1px solid var(--foreground);
+                border-radius: .2em;
+                background: var(--background);
+            }
+            #menu {
+                display: flex;
+                flex-flow: row wrap;
+                gap: 1em;
+            }
+            #menu a {
+                font-family: var(--wf-font);
+                font-weight: bold;
+                font-size: 1em;
+                background: #fff3;
+                border: 1px solid var(--foreground);
+                color: var(--foreground);
+                text-transform: capitalize;
+                cursor: pointer;
+                padding: .3em .5em;
+                border-radius: .2em;
             }
         </style>
 
@@ -20,270 +82,93 @@
         <script src="./js/GameEngine.js"></script>
     </head>
     <body>
-        <wf-game-engine>
-            <h1 slot="title">Hitta ord</h1>
-            <wf-game-board></wf-game-board>
-            <wf-wordlist name="djur" selected>
-                <ul>
-                    <li>Hund</li>
-                    <li>Katt</li>
-                    <li>Häst</li>
-                    <li>Lejon</li>
-                    <li>Tiger</li>
-                    <li>Björn</li>
-                    <li>Varg</li>
-                    <li>Elefant</li>
-                    <li>Giraff</li>
-                    <li>Ko</li>
-                    <li>Får</li>
-                    <li>Gorilla</li>
-                    <li>Pingvin</li>
-                    <li>Krokodil</li>
-                    <li>Val</li>
-                    <li>Haj</li>
-                    <li>Örn</li>
-                    <li>Fågel</li>
-                    <li>Ödla</li>
-                    <li>Orm</li>
-                    <li>Flodhäst</li>
-                    <li>Gepard</li>
-                    <li>Puma</li>
-                    <li>Myrslok</li>
-                    <li>Noshörning</li>
-                    <li>Koala</li>
-                    <li>Schimpans</li>
-                    <li>Känguru</li>
-                    <li>Älg</li>
-                    <li>Sköldpadda</li>
-                  </ul>
-                  
-            </wf-wordlist>
 
-            <wf-wordlist name="frukt">
-                <ul>
-                    <li>Äpple</li>
-                    <li>Banan</li>
-                    <li>Kiwi</li>
-                    <li>Apelsin</li>
-                    <li>Mango</li>
-                    <li>Vindruva</li>
-                    <li>Jordgubbe</li>
-                    <li>Ananas</li>
-                    <li>Päron</li>
-                    <li>Blåbär</li>
-                    <li>Granatäpple</li>
-                    <li>Plommon</li>
-                    <li>Körsbär</li>
-                    <li>Nektarin</li>
-                    <li>Persika</li>
-                    <li>Citron</li>
-                    <li>Lime</li>
-                    <li>Aprikos</li>
-                    <li>Melon</li>
-                    <li>Krusbär</li>
-                    <li>Papaya</li>
-                    <li>Klementin</li>
-                    <li>Durian</li>
-                    <li>Kokosnöt</li>
-                    <li>Pomelo</li>
-                    <li>Physalis</li>
-                    <li>Feijoa</li>
-                    <li>Carambola</li>
-                    <li>Rabarber</li>
-                    <li>Kumquat</li>
-                  </ul>
-                  
-            </wf-wordlist>
+        <main>
+            <header>
+                <h1>Hitta ord</h1>
+                <button>Nytt</button>
+            </header>
 
-            <wf-wordlist name="Namn">
-                <ul>
-                    <li>Maria</li>
-                    <li>Elisabeth</li>
-                    <li>Anna</li>
-                    <li>Kristina</li>
-                    <li>Margareta</li>
-                    <li>Eva</li>
-                    <li>Linnéa</li>
-                    <li>Karin</li>
-                    <li>Birgitta</li>
-                    <li>Marie</li>
-                    <li>Ingrid</li>
-                    <li>Sofia</li>
-                    <li>Marianne</li>
-                    <li>Lena</li>
-                    <li>Sara</li>
-                    <li>Karl</li>
-                    <li>Erik</li>
-                    <li>Lars</li>
-                    <li>Anders</li>
-                    <li>Per</li>
-                    <li>Mikael</li>
-                    <li>Johan</li>
-                    <li>Olof</li>
-                    <li>Nils</li>
-                    <li>Jan</li>
-                    <li>Gustav</li>
-                    <li>Hans</li>
-                    <li>Peter</li>
-                    <li>Lennart</li>
-                    <li>Fredrik</li>
-                  </ul>
-            </wf-wordlist>
+            <wf-game-engine>
+                <wf-game-board></wf-game-board>
+            </wf-game-engine>
+            
+            <dialog>
+                <div class="dialog-container">
+                    <h2>Nytt spel</h2>
+                    <div id="menu"></div>
+                </div>
+            </dialog>
+        </main>
 
-            <wf-wordlist name="länder">
-                <ul>
-                    <li>Sverige</li>
-                    <li>Norge</li>
-                    <li>Finland</li>
-                    <li>Estland</li>
-                    <li>Island</li>
-                    <li>Irland</li>
-                    <li>Spanien</li>
-                    <li>Portugal</li>
-                    <li>Tyskland</li>
-                    <li>Italien</li>
-                    <li>Österrike</li>
-                    <li>Frankrike</li>
-                    <li>Belgien</li>
-                    <li>Polen</li>
-                    <li>Holland</li>
-                    <li>Ryssland</li>
-                    <li>Lettland</li>
-                    <li>Litauen</li>
-                    <li>Schweiz</li>
-                    <li>Albanien</li>
-                    <li>Kroatien</li>
-                    <li>Serbien</li>
-                    <li>Grekland</li>
-                    <li>Bulgarien</li>
-                    <li>Rumänien</li>
-                    <li>Ungern</li>
-                    <li>Cypern</li>
-                    <li>Moldavien</li>
-                    <li>Malta</li>
-                    <li>Belarus</li>
-                  </ul>                  
-            </wf-wordlist>
-            <wf-wordlist name="färger">
-                <ul>
-                    <li>Röd</li>
-                    <li>Blå</li>
-                    <li>Gul</li>
-                    <li>Grön</li>
-                    <li>Vit</li>
-                    <li>Svart</li>
-                    <li>Orange</li>
-                    <li>Rosa</li>
-                    <li>Lila</li>
-                    <li>Brun</li>
-                    <li>Grå</li>
-                    <li>Beige</li>
-                    <li>Turkos</li>
-                    <li>Indigo</li>
-                    <li>Marinblå</li>
-                    <li>Guld</li>
-                    <li>Silver</li>
-                    <li>Koppar</li>
-                    <li>Magenta</li>
-                    <li>Teal</li>
-                    <li>Cyan</li>
-                  </ul>
-                  
-            </wf-wordlist>
+        <script type="module">
+            fetch('./wordlists.json')
+                .then((response) => response.json())
+                .then((json) => {
+                    setupDialogMenu(json.wordlists);
+                    return json;
+                })
+                .then((json) => {
+                    let query = new URLSearchParams(window.location.search);
+                    let selectedList;
+                    if (query.has("wordlist")) {
+                        let listName = query.get("wordlist");
+                        selectedList = json.wordlists.find((list) => Object.keys(list)[0] === listName);
+                    } else {
+                        selectedList = json.wordlists[(Math.floor(Math.random() * json.wordlists.length))];
+                    }
+                    return selectedList;
+                })
+                .then((wordlist) => {
+                    let game = document.querySelector("wf-game-engine");
+                    game.append(createList(wordlist));
+                });
+            
+            
+                function createList(wordlist) {
+                    let listElement = document.createElement("ul");
+                    for(let nameOfList in wordlist) {
+                        listElement.setAttribute("data-wf-wordlist", nameOfList);
+                        wordlist[nameOfList].forEach(word => {
+                            let listItem = document.createElement("li");
+                            listItem.innerText = word;
+                            listElement.append(listItem);
+                        });
+                    }
+                    return listElement;
+                }
 
-            <wf-wordlist name="Super mario">
-                <ul>
-                    <li>Mario</li>
-                    <li>Luigi</li>
-                    <li>Peach</li>
-                    <li>Bowser</li>
-                    <li>Mushroom</li>
-                    <li>Koopa</li>
-                    <li>Goomba</li>
-                    <li>Yoshi</li>
-                    <li>Toad</li>
-                    <li>Star</li>
-                    <li>Coin</li>
-                    <li>Castle</li>
-                    <li>Block</li>
-                    <li>Tanooki</li>
-                    <li>Lakitu</li>
-                    <li>Thwomp</li>
-                    <li>Boo</li>
-                    <li>Roy</li>
-                    <li>Morton</li>
-                    <li>Ludwig</li>
-                    <li>Lemmy</li>
-                    <li>Larry</li>
-                    <li>Wendy</li>
-                    <li>Iggy</li>
-                    <li>Kamek</li>
-                    <li>Grass</li>
-                    <li>Desert</li>
-                    <li>Pipe</li>
-                    <li>Water</li>
-                    <li>Underground</li>
-                    <li>Sky</li>
-                    <li>Spiny</li>
-                    <li>Firebro</li>
-                    <li>Cappy</li>
-                    <li>Odyssey</li>
-                    <li>Birdo</li>
-                </ul>
-                  
-            </wf-wordlist>
+                function setupDialogMenu(wordlists) {
+                    createMenu(wordlists);
+                    let dialog = document.querySelector("dialog");
+                    let menuButton = document.querySelector("header button");
+                    menuButton.addEventListener("click", () => {
+                        dialog.showModal();
+                    });
+                    dialog.addEventListener("click", (event) => {
+                        if (event.target === dialog) {
+                            dialog.close();
+                        }
+                    });
 
-            <wf-wordlist name="Fåglar">
-                <ul>
-                    <li>Talgoxe</li>
-                    <li>Gråsparv</li>
-                    <li>Koltrast</li>
-                    <li>Gräsand</li>
-                    <li>Kaja</li>
-                    <li>Råka</li>
-                    <li>Kråka</li>
-                    <li>Glada</li>
-                    <li>Sothöna</li>
-                    <li>Rörhöna</li>
-                    <li>Fiskmås</li>
-                    <li>Gråtrut</li>
-                    <li>Gärdsmyg</li>
-                    <li>Lärka</li>
-                    <li>Silltrut</li>
-                    <li>Hussvala</li>
-                    <li>Kornknarr</li>
-                    <li>Rödhake</li>
-                    <li>Skata</li>
-                    <li>Trana</li>
-                    <li>Kricka</li>
-                    <li>Sånglärka</li>
-                    <li>Stare</li>
-                    <li>Rödbena</li>
-                    <li>Domherre</li>
-                    <li>Knipa</li>
-                    <li>Vigg</li>
-                    <li>Hökuggla</li>
-                    <li>Rapphöna</li>
-                    <li>Strandskata</li>
-                    <li>Storskrake</li>
-                    <li>Grågås</li>
-                    <li>Blåmes</li>
-                    <li>Skärpiplärka</li>
-                    <li>Tornsvala</li>
-                    <li>Gulsparv</li>
-                    <li>Häger</li>
-                    <li>Skärfläcka</li>
-                    <li>Bläsand</li>
-                    <li>Ormvråk</li>
-                    <li>Sädgås</li>
-                    <li>Strömstare</li>
-                    <li>Grönsiska</li>
-                    <li>Morkulla</li>
-                    <li>Storspov</li>
-                  </ul>
-                  
-            </wf-wordlist>
-        </wf-game-engine>
+                }
 
+                function createMenu(wordlists) {
+                    let dialog = document.querySelector("dialog");
+                    let menuElement = document.querySelector("#menu");
+                    wordlists.forEach((list) => {
+                        let wordlistName = Object.keys(list)[0];
+                        let listLink = document.createElement("a");
+                        listLink.setAttribute("href", `?wordlist=${wordlistName}`);
+                        listLink.text = wordlistName;
+                        menuElement.append(listLink);
+                    });
+                }
+
+                function resetGame() {
+                    let currentWordlist = document.querySelector("wf-game-engine ul[data-wf-wordlist]");
+                    currentWordlist.remove();
+                }
+        </script>
     </body>
 </html>
