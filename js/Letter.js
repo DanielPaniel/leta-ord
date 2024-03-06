@@ -46,13 +46,14 @@ customElements.define('wf-letter', class extends HTMLElement  {
                 --rainbow-7: #c4faa1;
 
                 --color-clear: var(--rainbow-7);
-                --color-select: var(--rainbow-1);
+                --color-select: gold;
 
                 display: block;
             }
             :host([selected]), 
             :host([selected][cleared]) {
                 --background: var(--color-select);
+                filter: none;
             }
             :host([cleared]) {
                 --background: var(--color-clear);
