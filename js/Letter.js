@@ -37,14 +37,28 @@ customElements.define('wf-letter', class extends HTMLElement  {
                 --font: var(--wf-font, monospace);
                 --background: floralwhite;
 
+                --rainbow-1: #f8d1f8;
+                --rainbow-2: #a5a7ff;
+                --rainbow-3: #a5eaff;
+                --rainbow-4: #95ffdf;
+                --rainbow-5: #ffffb1;
+                --rainbow-6: #ffdea8;
+                --rainbow-7: #c4faa1;
+
+                --color-clear: var(--rainbow-7);
+                --color-select: var(--rainbow-1);
+
                 display: block;
             }
             :host([selected]), 
             :host([selected][cleared]) {
-                --background: gold;
+                --background: var(--color-select);
             }
             :host([cleared]) {
-                --background: darkseagreen;
+                --background: var(--color-clear);
+                filter: hue-rotate(calc(var(--colorIndex) * 1deg));
+                animation: 300ms cubic-bezier(.13,1.2,1,.31) calc(var(--index, 0) * 75ms) 1 forwards winning,
+                        150ms steps(10, jump-none) calc(var(--index, 0) * 35ms) calc(var(--index, 0) + 1) glitter;
             }
 
             button {
@@ -64,6 +78,27 @@ customElements.define('wf-letter', class extends HTMLElement  {
                 cursor: pointer;
                 padding: 0;
                 margin: 0;
+            }
+
+            @keyframes glitter {
+                from {
+                    filter: hue-rotate(0deg);
+                  }
+                  to {
+                    filter: hue-rotate(360deg);
+                  }
+            }
+
+            @keyframes winning {
+                0% {
+                    transform: scale(1) translateY(0);
+                }
+                50% {
+                    transform: scale(1.4) translateY(-.5em);
+                }
+                100% {
+                    transform: scale(1) translateY(0);
+                }
             }
 
             `;

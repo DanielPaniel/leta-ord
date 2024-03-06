@@ -41,7 +41,7 @@ customElements.define('wf-game-board', class extends HTMLElement  {
             .board {
                 display: grid;
                 grid-template-columns: repeat(var(--dimension), 1fr);
-                gap: .15em;
+                gap: .25em;
                 width: fit-content;
             }
             `;
@@ -143,9 +143,13 @@ customElements.define('wf-game-board', class extends HTMLElement  {
                 && lettersInWord === selectedLettersInWord;
     }
     _setCleared(lettersInWord) {
-        lettersInWord.forEach((letter) => {
+        let colorIndex = Math.floor(Math.random() * 360);
+        lettersInWord.forEach((letter, index) => {
+            letter.style.setProperty("--index", index);
+            letter.style.setProperty("--colorIndex", colorIndex);
             letter.setAttribute("cleared", "");
             letter.removeAttribute("selected");
+
         });      
     }
 
