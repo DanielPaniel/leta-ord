@@ -77,32 +77,31 @@ customElements.define('wf-game-board', class extends HTMLElement  {
     }
 
     _addListeners(allLetters) {
-        let board = this.shadowRoot.querySelector(".board");
         let isMouseDown = false;
-
-        // Verify interaction has begun
-        board.addEventListener("mousedown", () => {
-            isMouseDown = true;
-        });
-
-        // Stop interaction and evaluate selection
-        board.addEventListener("mouseup", () => {
+        let board = this.shadowRoot.querySelector(".board");
+        // If swipe is leaving the board - exit the movement
+        board.addEventListener("pointerleave", () => {
             isMouseDown = false;
             this._checkClearStatus();
         });
 
         allLetters.forEach((letter) => {
             // Letter where interaction starts
-            letter.addEventListener("mousedown", () => {
-            //    console.log("mousedown letter");
-                this._setSelected(letter);
+            letter.addEventListener("wf-letter-press", (event) => {
+                isMouseDown = true;
+                event.target.toggleAttribute("selected");
             });
 
             // Letters which are selected with a "swipe/drag"
-            letter.addEventListener("mouseenter", () => {
+            letter.addEventListener("wf-letter-activate", (event) => {
                 if (isMouseDown) {
-                    this._setSelected(letter);
+                    event.target.toggleAttribute("selected");
                 }
+            });
+
+            letter.addEventListener("wf-letter-release", () => {
+                isMouseDown = false;
+                this._checkClearStatus();
             });
         });
         return allLetters;

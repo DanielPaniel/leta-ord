@@ -7,7 +7,9 @@
         <style>
             :root {
                 --wf-font: monospace;
+                overscroll-behavior: none;              
             }
+  
             main {
                 width: min-content;
                 margin: auto;
@@ -37,7 +39,7 @@
                 --background: #333;
 
                 font-family: var(--wf-font);
-                font-size: 1em;
+                font-size: 1.5em;
                 background: transparent;
                 border: none;
 
@@ -111,7 +113,7 @@
                 <button>Nytt</button>
             </header>
 
-            <wf-game-engine dimension="10" max-words="20">
+            <wf-game-engine dimension="8" max-words="4">
             </wf-game-engine>
             
             <dialog>

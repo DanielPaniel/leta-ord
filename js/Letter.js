@@ -69,4 +69,26 @@ customElements.define('wf-letter', class extends HTMLElement  {
             `;
         return styles.cloneNode(true);
     }
+
+    connectedCallback() {
+        let button = this.shadowRoot.querySelector("button");
+
+        /* Use listeners on native html button element, 
+        in order to make use of release pointer capture.
+        Otherwise the pointer-event will be stuck on its initial element */
+        button.addEventListener("pointerdown", (event) => {
+            event.target.releasePointerCapture(event.pointerId);
+            this.dispatchEvent(new CustomEvent("wf-letter-press"));
+        });
+
+        // Letters which are selected with a "swipe/drag"
+        button.addEventListener("pointerenter", (event) => {
+            event.target.releasePointerCapture(event.pointerId);
+            this.dispatchEvent(new CustomEvent("wf-letter-activate"));
+        });
+
+        button.addEventListener("pointerup", () => {
+            this.dispatchEvent(new CustomEvent("wf-letter-release"));
+        });
+    }
 });
