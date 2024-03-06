@@ -74,10 +74,32 @@
                 padding: .3em .5em;
                 border-radius: .2em;
             }
+            .list {
+                display: flex;
+                flex-flow: row wrap;
+                gap: .75em;
+                margin-block: 1em;
+                padding: 0;
+                list-style: none;
+            }
+            .list li {
+                color: black;
+                font-family: var(--wf-font);
+                font-size: 1.33em;
+                text-transform: uppercase;
+                font-weight: bold;
+                margin: 0;
+                padding: 0;
+                line-height: 1;
+                padding-block: .4em .3em;
+                padding-inline: .75em;
+                background: #eee;
+                border: 1px solid #ccc;
+                border-radius: 1em;
+            }
         </style>
 
         <script src="./js/Letter.js"></script>
-        <script src="./js/Wordlist.js"></script>
         <script src="./js/GameBoard.js"></script>
         <script src="./js/GameEngine.js"></script>
     </head>
@@ -89,8 +111,7 @@
                 <button>Nytt</button>
             </header>
 
-            <wf-game-engine>
-                <wf-game-board></wf-game-board>
+            <wf-game-engine dimension="10" max-words="20">
             </wf-game-engine>
             
             <dialog>
@@ -127,6 +148,7 @@
             
                 function createList(wordlist) {
                     let listElement = document.createElement("ul");
+                    listElement.classList.add("list");
                     for(let nameOfList in wordlist) {
                         listElement.setAttribute("data-wf-wordlist", nameOfList);
                         wordlist[nameOfList].forEach(word => {

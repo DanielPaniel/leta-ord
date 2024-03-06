@@ -1,11 +1,9 @@
 
 customElements.define('wf-game-engine', class extends HTMLElement  {
-
+    static observedAttributes = ["dimension", "max-words"];
     constructor() {
         super();
-        this._dimension = 8;
         this._maxNbrOfWords = 10;
-
         this.attachShadow({mode: "open"});
         let shadow = this.shadowRoot;
         shadow.appendChild(this._getTemplate());
@@ -41,31 +39,79 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
                 display: block;
                 width: min-content;
             }
-
-            ::slotted(ul) {
-                display: none;
-            }
             `;
         return styles.cloneNode(true);
     }
 
-    connectedCallback() {
-        this._setup();
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name === "dimension"){
+            this._createLetterGrid(newValue);
+        }
+        if (name === "max-words") {
+            this._setup();
+        }
+    }
+
+    _getAttribute(attributeName) {
+        return new Promise((resolve, reject) => {
+            const interval = setInterval(() => {
+              let attribute = this.getAttribute(attributeName);
+              if (attribute) {
+                clearInterval(interval);
+                resolve(attribute);
+              }
+            }, 100);
+        
+            // Timeout if attribute is not found
+            setTimeout(() => {
+              clearInterval(interval);
+              reject(new Error(`Timeout waiting for attribute: ${attributeName}`));
+            }, 10000);
+          });
+    }
+
+    _createLetterGrid(dimension) {
+        let oldBoard = this.shadowRoot.querySelector("wf-game-board");
+        if (oldBoard) {
+            oldBoard.remove();
+        }
+        let newBoard = document.createElement("wf-game-board");
+        newBoard.addEventListener("wf-word-found", (event) => {
+            this._crossOutWordFromList(event.detail.word);
+        });
+        newBoard.style.setProperty("--dimension", dimension);
+
+        let amountOfLetters = dimension * dimension;
+        for (let i = 0; i < amountOfLetters; i ++) {
+            let letterElement = this._createLetterElement("-");
+            newBoard.append(letterElement);
+        }
+        this.shadowRoot.prepend(newBoard);
+    }
+
+    async _crossOutWordFromList(foundWord) {
+        await this._getElementsFromLightDom("ul[data-wf-wordlist] li")
+            .then ((words) => {
+                words.forEach((word) => {
+                    if (word.textContent === foundWord) {
+                        word.style.opacity = "0.5";
+                        word.style.textDecoration = "line-through";
+                    }
+                });
+            });
     }
 
     async _setup() {
-        let words = await this._getElementsFromLightDom("ul[data-wf-wordlist] li")
-            .then((elements) => this._parseWords(elements));
-        let letters = this._generateBoard(this._shuffleArray(words));
+        let letters = await this._getElementsFromLightDom("ul[data-wf-wordlist] li")
+            .then((elements) => this._parseWords(elements))
+            .then((elements) => this._generateBoard(elements));
+
         
-        let boardElement = this.querySelector("wf-game-board");
-        boardElement.innerHTML = "";
         letters.forEach((row) => {
             row.forEach((letter) => {
                 if (letter.textContent === "-") {
                     this._updateLetterElement(letter, this._randomChar());
                 }
-                boardElement.append(letter);
             });
         });
 
@@ -89,45 +135,52 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
         });
     }
 
-    _parseWords(elements) {
+    async _parseWords(elements) {
         let words = [];
+        let dimension = await this._getAttribute("dimension");
         elements.forEach((wordElement) => {
             let word = wordElement.textContent;
-            // Ta bort för långa ord
-            if (word.length <= this._dimension) {
-                words.push(word);
+            // Hide all words
+            wordElement.setAttribute("hidden", "");
+            // Sort in a new array, but exclude words that doesnt fit
+            if (word.length <= dimension) {
+                words.push(wordElement);
             }
         });
+        this._shuffleArray(words);
         return words;
     }
 
     _generateBoard(words) {
         // Skapa ett korsord
-        const board = [];
-        for (let i = 0; i < this._dimension; i++) {
-            board[i] = [];
-            for (let j = 0; j < this._dimension; j++) {
-                board[i][j] = this._createLetterElement("-");
+        let letters = this.shadowRoot.querySelectorAll("wf-letter");
+        let maxWords = parseInt(this.getAttribute('max-words'));
+        let dimension = Math.sqrt(letters.length);
+        let board = [];
+        for (let y = 0; y < dimension; y++) {
+            board[y] = [];
+            for (let x = 0; x < dimension; x++) {
+                board[y][x] = letters[y * dimension + x];
             }
         }
 
         // Placera in orden i korsordet
         let placedWords = 0;
-        for (let i = 0; i < words.length && placedWords <  this._maxNbrOfWords; i++) {
-            const word = words[i];
-            const length = words[i].length;
+        for (let i = 0; i < words.length && placedWords <  maxWords; i++) {
+            let wordElement = words[i];
+            const word = wordElement.textContent;
             const direction = Math.random() < 0.5 ? "across" : "down";
             let x, y;
 
             if (direction === "across") {
-                x = Math.floor(Math.random() * (this._dimension - length));
-                y = Math.floor(Math.random() * this._dimension);
+                x = Math.floor(Math.random() * (dimension - word.length));
+                y = Math.floor(Math.random() * dimension);
             } else {
-                x = Math.floor(Math.random() * this._dimension);
-                y = Math.floor(Math.random() * (this._dimension - length));
+                x = Math.floor(Math.random() * dimension);
+                y = Math.floor(Math.random() * (dimension - word.length));
             }
-            if (this._canPlaceWord(board, word, x, y, direction)) {
-                this._placeWord(board, word, x, y, direction);
+            if (this._canPlaceWord(board, word, x, y, direction, dimension)) {
+                this._placeWord(board, wordElement, x, y, direction);
                 placedWords++;
             }
         }
@@ -136,10 +189,10 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
     }
 
     // Hjälpfunktion för att kontrollera om ett ord kan placeras
-    _canPlaceWord(board, word, x, y, direction) {
+    _canPlaceWord(board, word, x, y, direction, dimension) {
         const length = word.length;
         if (direction === "across") {
-            if (x + length > this._dimension) return false;
+            if (x + length > dimension) return false;
             for (let i = 0; i < length; i++) {
                 if (board[y][x + i].textContent !== "-" 
                     && board[y][x + i].textContent !== word[i]) {
@@ -147,7 +200,7 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
                 }
             }
         } else {
-            if (y + length > this._dimension) return false;
+            if (y + length > dimension) return false;
             for (let i = 0; i < length; i++) {
                 if (board[y + i][x].textContent !== "-" 
                     && board[y + i][x].textContent !== word[i]) {
@@ -160,18 +213,19 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
     }
               
     // Placera ett ord i korsordet
-    _placeWord(board, word, x, y, direction) {
-        const length = word.length;
+    _placeWord(board, wordElement, x, y, direction) {
+        let word = wordElement.textContent;
 
         if (direction === "across") {
-            for (let i = 0; i < length; i++) {
+            for (let i = 0; i < word.length; i++) {
                 this._updateLetterElement(board[y][x + i], word[i], word);
             }
         } else {
-            for (let i = 0; i < length; i++) {
+            for (let i = 0; i < word.length; i++) {
                 this._updateLetterElement(board[y + i][x], word[i], "", word);
             }
         }
+        wordElement.removeAttribute("hidden");
     }
 
     _createLetterElement(letter) {
