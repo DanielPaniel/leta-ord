@@ -121,7 +121,7 @@
                 <button>Nytt</button>
             </header>
 
-            <wf-game-engine dimension="8" max-words="30">
+            <wf-game-engine dimension="8" max-words="4">
             </wf-game-engine>
             
             <dialog>
@@ -153,6 +153,11 @@
                 .then((wordlist) => {
                     let game = document.querySelector("wf-game-engine");
                     game.append(createList(wordlist));
+                    game.addEventListener("wf-game-complete", () => {
+                        let dialog = document.querySelector("dialog");
+                        setTimeout(() => dialog.showModal(), 4000);
+                    });
+
                 });
             
             

@@ -18,8 +18,8 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
         let template = document.createElement("template");
         template.innerHTML = // html
         `
-            <slot></slot>
-        `;
+        <slot></slot>
+       `;
         return template.content.cloneNode(true);
     }
     
@@ -38,6 +38,31 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
                 font-size: 12px;
                 display: block;
                 width: min-content;
+            }
+            wf-game-board wf-letter[cleared] {
+                animation: 120ms cubic-bezier(0,.37,.48,1) calc(var(--index, 0) * 70ms) 2 alternate winning;
+            }
+            wf-game-board.complete-animation wf-letter[cleared] {
+                /* 1000ms is magic nbr */
+                animation: 200ms steps(10, jump-none) calc(var(--index, 1) * 50ms + 1000ms) 10 glitter,
+                    120ms cubic-bezier(0,.37,.48,1) calc(var(--index, 0) * 70ms) 2 alternate winning;
+            }
+
+            @keyframes glitter {
+                from {
+                    filter: hue-rotate(0deg);
+                  }
+                  to {
+                    filter: hue-rotate(360deg);
+                  }
+            }
+            @keyframes winning {
+                0% {
+                    transform: scale(1) translateY(0);
+                }
+                100% {
+                    transform: scale(1.5) translateY(-.5em);
+                }
             }
             `;
         return styles.cloneNode(true);
@@ -78,10 +103,10 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
         let newBoard = document.createElement("wf-game-board");
         newBoard.addEventListener("wf-word-found", (event) => {
             this._crossOutWordFromList(event.detail.word);
-            /**
-             * TODO: Trigga nån animation eller nåt här
-             */
-            console.log("All complete: " + event.detail.isComplete);
+            if (event.detail.isComplete) {
+                newBoard.classList.add("complete-animation");
+                this.dispatchEvent(new CustomEvent("wf-game-complete"));
+            }
         });
         newBoard.style.setProperty("--dimension", dimension);
 

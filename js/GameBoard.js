@@ -186,7 +186,7 @@ customElements.define('wf-game-board', class extends HTMLElement  {
         return new CustomEvent("wf-word-found", {
             detail: {
                 word: `${foundWord}`,
-                isComplete: `${isComplete}`
+                isComplete: isComplete
             }
         });
     }

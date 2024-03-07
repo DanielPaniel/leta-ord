@@ -59,7 +59,6 @@ customElements.define('wf-letter', class extends HTMLElement  {
             :host([cleared]) {
                 --background: var(--color-clear);
                 filter: hue-rotate(calc(var(--colorIndex) * 1deg));
-                animation: 120ms cubic-bezier(0,.37,.48,1) calc(var(--index, 0) * 70ms) 2 alternate winning;
             }
 
             button {
@@ -80,25 +79,6 @@ customElements.define('wf-letter', class extends HTMLElement  {
                 padding: 0;
                 margin: 0;
             }
-
-            @keyframes glitter {
-                from {
-                    filter: hue-rotate(0deg);
-                  }
-                  to {
-                    filter: hue-rotate(360deg);
-                  }
-            }
-
-            @keyframes winning {
-                0% {
-                    transform: scale(1) translateY(0);
-                }
-                100% {
-                    transform: scale(1.5) translateY(-.5em);
-                }
-            }
-
             `;
         return styles.cloneNode(true);
     }
