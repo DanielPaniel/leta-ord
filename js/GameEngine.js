@@ -78,6 +78,10 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
         let newBoard = document.createElement("wf-game-board");
         newBoard.addEventListener("wf-word-found", (event) => {
             this._crossOutWordFromList(event.detail.word);
+            /**
+             * TODO: Trigga nån animation eller nåt här
+             */
+            console.log("All complete: " + event.detail.isComplete);
         });
         newBoard.style.setProperty("--dimension", dimension);
 

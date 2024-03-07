@@ -125,7 +125,10 @@ customElements.define('wf-game-board', class extends HTMLElement  {
 
             if (this._wordIsSelected(selectedLetters.length, lettersInWord.length, selectedLettersInWord)) {
                 this._setCleared(lettersInWord);
-                this.dispatchEvent(this._createEvent(currentWordX));
+                this.dispatchEvent(
+                    this._createEvent(
+                        currentWordX,
+                        this._allWordsAreCleared()));
             }
         });
         currentWords[1].forEach((currentWordY) => {
@@ -134,13 +137,25 @@ customElements.define('wf-game-board', class extends HTMLElement  {
 
             if (this._wordIsSelected(selectedLetters.length, lettersInWord.length, selectedLettersInWord)) {
                 this._setCleared(lettersInWord);
-                this.dispatchEvent(this._createEvent(currentWordY));
+                this.dispatchEvent(
+                    this._createEvent(
+                        currentWordY,
+                        this._allWordsAreCleared()));
             }
         });
     }
     _wordIsSelected(selectedLetters, lettersInWord, selectedLettersInWord) {
         return selectedLetters === lettersInWord 
                 && lettersInWord === selectedLettersInWord;
+    }
+    _allWordsAreCleared() {
+        let xWords = this.querySelectorAll(`wf-letter[word-id-x]:not([cleared])`);
+        let yWords = this.querySelectorAll(`wf-letter[word-id-y]:not([cleared])`);
+        if (xWords.length || yWords.length) {
+            return false;
+        } else {
+            return true;
+        }
     }
     _setCleared(lettersInWord) {
         let colorIndex = Math.floor(Math.random() * 360);
@@ -167,10 +182,11 @@ customElements.define('wf-game-board', class extends HTMLElement  {
         return [wordsX, wordsY];
     }
 
-    _createEvent(foundWord) {
+    _createEvent(foundWord, isComplete = false) {
         return new CustomEvent("wf-word-found", {
             detail: {
-                word: `${foundWord}`
+                word: `${foundWord}`,
+                isComplete: `${isComplete}`
             }
         });
     }
