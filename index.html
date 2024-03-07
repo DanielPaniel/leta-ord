@@ -9,13 +9,6 @@
                 --wf-font: monospace;
                 overscroll-behavior: none;   
                 
-                --rainbow-1: #f8d1f8;
-                --rainbow-2: #a5a7ff;
-                --rainbow-3: #a5eaff;
-                --rainbow-4: #95ffdf;
-                --rainbow-5: #c4faa1;
-                --rainbow-6: #ffffb1;
-                --rainbow-7: #ffdea8;
             }
   
             main {
@@ -47,17 +40,22 @@
                 --background: #333;
 
                 font-family: var(--wf-font);
-                font-size: 1.5em;
+                font-size: 1.2em;
                 background: transparent;
                 border: none;
 
                 color: var(--foreground);
                 padding-block: 0;
                 padding-inline: 0;
-                width: min(80vw, 20em);
+                width: min(80vw, 30em);
+                animation: none;
+            }
+            dialog[open] {
+                animation: 300ms ease-out 1 forwards dialog-reveal;
             }
             dialog::backdrop {
                 background: rgba(0,0,0,.5);
+                -webkit-backdrop-filter: blur(5px);
                 backdrop-filter: blur(10px);
             }
             .dialog-container {
@@ -74,15 +72,16 @@
             }
             #menu a {
                 font-family: var(--wf-font);
-                font-weight: bold;
+                font-weight: normal;
                 font-size: 1em;
                 background: #fff3;
-                border: 1px solid var(--foreground);
                 color: var(--foreground);
-                text-transform: capitalize;
+                text-transform: uppercase;
+                text-decoration: none;
                 cursor: pointer;
-                padding: .3em .5em;
+                padding: .4em .6em;
                 border-radius: .2em;
+                letter-spacing: .05em;
             }
             .list {
                 display: flex;
@@ -97,16 +96,43 @@
                 font-family: var(--wf-font);
                 font-size: 1.2em;
                 text-transform: uppercase;
-                font-weight: bold;
+                font-weight: normal;
                 margin: 0;
                 padding: 0;
                 line-height: 1;
                 padding-block: .4em .3em;
                 padding-inline: .75em;
-                background: #eee;
-                border: 1px solid #ccc;
-                border-radius: 1em;
+                letter-spacing: .05em;
+                opacity: 0;
+                transform: translateX(.75em);
+                animation: 200ms ease calc(var(--index, 0) * 20ms) 1 forwards reveal;
             }
+            .list li[hidden] {
+                animation: none;
+            }
+
+            @keyframes reveal {
+                from {
+                    opacity: 0;
+                    transform: translateX(.75em);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+
+            @keyframes dialog-reveal {
+                from {
+                    opacity: 0;
+                    transform: translateY(2em);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
         </style>
 
         <script src="./js/Letter.js"></script>
@@ -157,7 +183,6 @@
                         let dialog = document.querySelector("dialog");
                         setTimeout(() => dialog.showModal(), 4000);
                     });
-
                 });
             
             
@@ -166,9 +191,11 @@
                     listElement.classList.add("list");
                     for(let nameOfList in wordlist) {
                         listElement.setAttribute("data-wf-wordlist", nameOfList);
-                        wordlist[nameOfList].forEach(word => {
+                        wordlist[nameOfList].forEach((word, index) => {
                             let listItem = document.createElement("li");
+                            listItem.setAttribute("hidden", "");
                             listItem.innerText = word;
+                            listItem.style.setProperty("--index", index);
                             listElement.append(listItem);
                         });
                     }

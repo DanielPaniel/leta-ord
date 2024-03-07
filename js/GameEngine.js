@@ -112,7 +112,7 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
 
         let amountOfLetters = dimension * dimension;
         for (let i = 0; i < amountOfLetters; i ++) {
-            let letterElement = this._createLetterElement("-");
+            let letterElement = this._createLetterElement();
             newBoard.append(letterElement);
         }
         this.shadowRoot.prepend(newBoard);
@@ -123,7 +123,7 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
             .then ((words) => {
                 words.forEach((word) => {
                     if (word.textContent === foundWord) {
-                        word.style.opacity = "0.5";
+                        word.style.color = "#aaa";
                         word.style.textDecoration = "line-through";
                     }
                 });
@@ -138,7 +138,7 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
         
         letters.forEach((row) => {
             row.forEach((letter) => {
-                if (letter.textContent === "-") {
+                if (!letter.hasAttribute("has-loaded")) {
                     this._updateLetterElement(letter, this._randomChar());
                 }
             });
@@ -223,7 +223,7 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
         if (direction === "across") {
             if (x + length > dimension) return false;
             for (let i = 0; i < length; i++) {
-                if (board[y][x + i].textContent !== "-" 
+                if (board[y][x + i].hasAttribute("has-loaded") 
                     && board[y][x + i].textContent !== word[i]) {
                     return false;
                 }
@@ -231,7 +231,7 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
         } else {
             if (y + length > dimension) return false;
             for (let i = 0; i < length; i++) {
-                if (board[y + i][x].textContent !== "-" 
+                if (board[y + i][x].hasAttribute("has-loaded") 
                     && board[y + i][x].textContent !== word[i]) {
                     return false;
                 }
@@ -257,14 +257,17 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
         wordElement.removeAttribute("hidden");
     }
 
-    _createLetterElement(letter) {
+    _createLetterElement(letter = "") {
         let letterElement = document.createElement("wf-letter");
-        this._updateLetterElement(letterElement, letter);
+        if (letter !== "") {
+            this._updateLetterElement(letterElement, letter);
+        }
         return letterElement.cloneNode(true);
     }
 
     _updateLetterElement(letterElement, letter, wordIdX = "", wordIdY = "") {
         letterElement.innerHTML = letter;
+        letterElement.setAttribute("has-loaded", "");
         if (wordIdX !== "") {
             letterElement.setAttribute("word-id-x", wordIdX);
         }

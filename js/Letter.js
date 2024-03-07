@@ -19,7 +19,9 @@ customElements.define('wf-letter', class extends HTMLElement  {
         template.innerHTML = // html
         `
         <button>
-            <slot></slot>
+            <div>
+                <slot></slot>
+            </div>
         </button>
         `;
         return template.content.cloneNode(true);
@@ -35,18 +37,10 @@ customElements.define('wf-letter', class extends HTMLElement  {
         `
             :host {
                 --font: var(--wf-font, monospace);
-                --background: floralwhite;
-
-                --rainbow-1: #f8d1f8;
-                --rainbow-2: #a5a7ff;
-                --rainbow-3: #a5eaff;
-                --rainbow-4: #95ffdf;
-                --rainbow-5: #ffffb1;
-                --rainbow-6: #ffdea8;
-                --rainbow-7: #c4faa1;
-
-                --color-clear: var(--rainbow-7);
-                --color-select: gold;
+                --background: #fffdf0;
+                --color-clear: #c4faa1;
+                --color-select: #ffe44b;
+                --letter-opacity: 0;
 
                 display: block;
             }
@@ -60,7 +54,9 @@ customElements.define('wf-letter', class extends HTMLElement  {
                 --background: var(--color-clear);
                 filter: hue-rotate(calc(var(--colorIndex) * 1deg));
             }
-
+            :host([has-loaded]) {
+                --letter-opacity: 1;
+            }
             button {
                 color: black;
                 font-family: var(--font);
@@ -72,18 +68,26 @@ customElements.define('wf-letter', class extends HTMLElement  {
                 block-size: 2em;
                 background: var(--background);
                 border-radius: .15em;
-                border: .075em solid #8882;
-                border-inline-end-color: #8883;
-                border-block-end-color: #8884;
+                border: .075em solid #5552;
+                border-inline-end-color: #5553;
+                border-block-end-color: #5554;
                 cursor: pointer;
                 padding: 0;
                 margin: 0;
             }
+            button div {
+                opacity: var(--letter-opacity);
+                transition: opacity 200ms ease-in-out calc(var(--index, 0) * 8ms);
+                
+            }
+
             `;
         return styles.cloneNode(true);
     }
 
     connectedCallback() {
+        let randomIndex = Math.floor(Math.random() * 100);
+        this.style.setProperty("--index", randomIndex)
         let button = this.shadowRoot.querySelector("button");
 
         /* Use listeners on native html button element, 
