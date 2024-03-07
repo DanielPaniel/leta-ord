@@ -54,12 +54,12 @@ customElements.define('wf-letter', class extends HTMLElement  {
             :host([selected][cleared]) {
                 --background: var(--color-select);
                 filter: none;
+                animation: none;
             }
             :host([cleared]) {
                 --background: var(--color-clear);
                 filter: hue-rotate(calc(var(--colorIndex) * 1deg));
-                animation: 300ms cubic-bezier(.13,1.2,1,.31) calc(var(--index, 0) * 75ms) 1 forwards winning,
-                        150ms steps(10, jump-none) calc(var(--index, 0) * 35ms) calc(var(--index, 0) + 1) glitter;
+                animation: 120ms cubic-bezier(0,.37,.48,1) calc(var(--index, 0) * 70ms) 2 alternate winning;
             }
 
             button {
@@ -94,11 +94,8 @@ customElements.define('wf-letter', class extends HTMLElement  {
                 0% {
                     transform: scale(1) translateY(0);
                 }
-                50% {
-                    transform: scale(1.4) translateY(-.5em);
-                }
                 100% {
-                    transform: scale(1) translateY(0);
+                    transform: scale(1.5) translateY(-.5em);
                 }
             }
 
