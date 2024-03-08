@@ -8,7 +8,6 @@
             :root {
                 --wf-font: monospace;
                 overscroll-behavior: none;   
-                
             }
   
             main {
@@ -71,6 +70,7 @@
                 gap: 1em;
             }
             #menu a {
+                display: block;
                 font-family: var(--wf-font);
                 font-weight: normal;
                 font-size: 1em;
@@ -114,11 +114,11 @@
             @keyframes reveal {
                 from {
                     opacity: 0;
-                    transform: translateX(.75em);
+                    transform: translateY(.25em);
                 }
                 to {
                     opacity: 1;
-                    transform: translateX(0);
+                    transform: translateY(0);
                 }
             }
 

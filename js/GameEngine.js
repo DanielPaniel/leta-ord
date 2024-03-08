@@ -39,6 +39,7 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
                 display: block;
                 width: min-content;
             }
+
             wf-game-board wf-letter[cleared] {
                 animation: 120ms cubic-bezier(0,.37,.48,1) calc(var(--index, 0) * 70ms) 2 alternate winning;
             }

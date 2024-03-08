@@ -1,6 +1,6 @@
 
 customElements.define('wf-letter', class extends HTMLElement  {
-
+    static observedAttributes = ["has-loaded"];
     constructor() {
         super();
 
@@ -40,8 +40,7 @@ customElements.define('wf-letter', class extends HTMLElement  {
                 --background: #fffdf0;
                 --color-clear: #c4faa1;
                 --color-select: #ffe44b;
-                --letter-opacity: 0;
-
+                
                 display: block;
             }
             :host([selected]), 
@@ -54,8 +53,9 @@ customElements.define('wf-letter', class extends HTMLElement  {
                 --background: var(--color-clear);
                 filter: hue-rotate(calc(var(--colorIndex) * 1deg));
             }
-            :host([has-loaded]) {
-                --letter-opacity: 1;
+            :host([has-loaded]) button div {
+                /* for some reason this could not be done with transition: opacity in safari */
+                animation: 200ms ease-in-out calc(var(--index, 0) * 8ms) 1 forwards reveal;
             }
             button {
                 color: black;
@@ -76,9 +76,17 @@ customElements.define('wf-letter', class extends HTMLElement  {
                 margin: 0;
             }
             button div {
-                opacity: var(--letter-opacity);
-                transition: opacity 200ms ease-in-out calc(var(--index, 0) * 8ms);
-                
+                opacity: 0;
+
+            }
+
+            @keyframes reveal {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
             }
 
             `;
@@ -87,7 +95,7 @@ customElements.define('wf-letter', class extends HTMLElement  {
 
     connectedCallback() {
         let randomIndex = Math.floor(Math.random() * 100);
-        this.style.setProperty("--index", randomIndex)
+        this.style.setProperty("--index", randomIndex);
         let button = this.shadowRoot.querySelector("button");
 
         /* Use listeners on native html button element, 
