@@ -35,13 +35,20 @@ customElements.define('wf-game-board', class extends HTMLElement  {
             :host {
                 /* default value - will be replaced by engine */
                 --dimension: 8;
+                --width: min(80vw, 70vh);
+                --nbrOfGaps: calc(var(--dimension) - 2);
+                --gap-size: calc(var(--width) / var(--nbrOfGaps) * 0.05);
+                --letter-size: calc((var(--width) - var(--gap-size)) / var(--dimension));
+
+
                 display: block;
                 width: min-content;
             }
             .board {
                 display: grid;
+
                 grid-template-columns: repeat(var(--dimension), 1fr);
-                gap: .25em;
+                gap: var(--gap-size);
                 width: fit-content;
             }
             `;

@@ -37,20 +37,24 @@ customElements.define('wf-letter', class extends HTMLElement  {
         `
             :host {
                 --font: var(--wf-font, monospace);
-                --background: #fffdf0;
+                --background: #4e4d4c;
+                --foreground: #fff;
                 --color-clear: #c4faa1;
                 --color-select: #ffe44b;
-                
+                --foreground-color-select: #000;
+
                 display: block;
             }
             :host([selected]), 
             :host([selected][cleared]) {
                 --background: var(--color-select);
+                --foreground: var(--foreground-color-select);
                 filter: none;
                 animation: none;
             }
             :host([cleared]) {
                 --background: var(--color-clear);
+                --foreground: var(--foreground-color-select);
                 filter: hue-rotate(calc(var(--colorIndex) * 1deg));
             }
             :host([has-loaded]) button div {
@@ -58,19 +62,22 @@ customElements.define('wf-letter', class extends HTMLElement  {
                 animation: 200ms ease-in-out calc(var(--index, 0) * 8ms) 1 forwards reveal;
             }
             button {
-                color: black;
+                color: var(--foreground);
+                display: block;
                 font-family: var(--font);
-                font-size: 2em;
+                font-size: calc(var(--letter-size) / 2);
                 text-transform: uppercase;
                 font-weight: bold;
                 text-align: center;
+                inline-size: var(--letter-size);
+                block-size: var(--letter-size);
                 inline-size: 2em;
                 block-size: 2em;
                 background: var(--background);
                 border-radius: .15em;
-                border: .075em solid #5552;
-                border-inline-end-color: #5553;
-                border-block-end-color: #5554;
+                border: .075em solid #fff3;
+                border-inline-end-color: #0005;
+                border-block-end-color: #0006;
                 cursor: pointer;
                 padding: 0;
                 margin: 0;
