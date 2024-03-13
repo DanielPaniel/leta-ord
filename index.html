@@ -172,15 +172,8 @@
                     return json;
                 })
                 .then((json) => {
-                    let query = new URLSearchParams(window.location.search);
-                    let selectedList;
-                    if (query.has("wordlist")) {
-                        let listName = query.get("wordlist");
-                        selectedList = json.wordlists.find((list) => Object.keys(list)[0] === listName);
-                    } else {
-                        selectedList = json.wordlists[(Math.floor(Math.random() * json.wordlists.length))];
-                    }
-                    return selectedList;
+                    // Return a random wordlist
+                    return json.wordlists[(Math.floor(Math.random() * json.wordlists.length))];;
                 })
                 .then((wordlist) => {
                     let game = document.querySelector("wf-game-engine");
@@ -190,7 +183,6 @@
                         setTimeout(() => dialog.showModal(), 4000);
                     });
                 });
-            
             
                 function createList(wordlist) {
                     let listElement = document.createElement("ul");
@@ -226,12 +218,18 @@
                 function createMenu(wordlists) {
                     let dialog = document.querySelector("dialog");
                     let menuElement = document.querySelector("#menu");
+                    let game = document.querySelector("wf-game-engine");
                     wordlists.forEach((list) => {
                         let wordlistName = Object.keys(list)[0];
-                        let listLink = document.createElement("a");
-                        listLink.setAttribute("href", `?wordlist=${wordlistName}`);
-                        listLink.text = wordlistName;
-                        menuElement.append(listLink);
+                        let listButton = document.createElement("button");
+                        listButton.innerHTML = wordlistName;
+                        console.log(wordlistName);
+                        listButton.addEventListener("click", () => {
+                            resetGame();
+                            dialog.close();
+                            game.append(createList(list));
+                        });
+                        menuElement.append(listButton);
                     });
                 }
 

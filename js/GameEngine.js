@@ -69,13 +69,12 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
         return styles.cloneNode(true);
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (name === "dimension"){
-            this._createLetterGrid(newValue);
-        }
-        if (name === "max-words") {
+    connectedCallback() {
+        this.shadowRoot.querySelector("slot").addEventListener("slotchange", async () => {
+            let grid = await this._getAttribute("dimension");
+            this._createLetterGrid(grid);
             this._setup();
-        }
+        });
     }
 
     _getAttribute(attributeName) {
@@ -170,8 +169,6 @@ customElements.define('wf-game-engine', class extends HTMLElement  {
         let dimension = await this._getAttribute("dimension");
         elements.forEach((wordElement) => {
             let word = wordElement.textContent;
-            // Hide all words
-            wordElement.setAttribute("hidden", "");
             // Sort in a new array, but exclude words that doesnt fit
             if (word.length <= dimension) {
                 words.push(wordElement);
