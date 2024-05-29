@@ -18,11 +18,11 @@ customElements.define('wf-letter', class extends HTMLElement  {
         let template = document.createElement("template");
         template.innerHTML = // html
         `
-        <button>
+        <div class="button">
             <div>
                 <slot></slot>
             </div>
-        </button>
+        </div>
         `;
         return template.content.cloneNode(true);
     }
@@ -57,13 +57,13 @@ customElements.define('wf-letter', class extends HTMLElement  {
                 --foreground: var(--foreground-color-select);
                 filter: hue-rotate(calc(var(--colorIndex) * 1deg));
             }
-            :host([has-loaded]) button div {
+            :host([has-loaded]) .button div {
                 /* for some reason this could not be done with transition: opacity in safari */
                 animation: 200ms ease-in-out calc(var(--index, 0) * 8ms) 1 forwards reveal;
             }
-            button {
+            .button {
                 color: var(--foreground);
-                display: block;
+                display: flex;
                 font-family: var(--font);
                 font-size: calc(var(--letter-size) / 2);
                 text-transform: uppercase;
@@ -81,9 +81,13 @@ customElements.define('wf-letter', class extends HTMLElement  {
                 cursor: pointer;
                 padding: 0;
                 margin: 0;
+
+                -webkit-user-select: none; /* Safari */
+                user-select: none;
             }
-            button div {
+            .button div {
                 opacity: 0;
+                margin: auto;
 
             }
 
@@ -103,7 +107,7 @@ customElements.define('wf-letter', class extends HTMLElement  {
     connectedCallback() {
         let randomIndex = Math.floor(Math.random() * 100);
         this.style.setProperty("--index", randomIndex);
-        let button = this.shadowRoot.querySelector("button");
+        let button = this.shadowRoot.querySelector(".button");
 
         /* Use listeners on native html button element, 
         in order to make use of release pointer capture.

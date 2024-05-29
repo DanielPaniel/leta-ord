@@ -35,9 +35,9 @@ customElements.define('wf-game-board', class extends HTMLElement  {
             :host {
                 /* default value - will be replaced by engine */
                 --dimension: 8;
-                --width: min(80vw, 70vh);
+                --width: min(90vw, 70vh);
                 --nbrOfGaps: calc(var(--dimension) - 2);
-                --gap-size: calc(var(--width) / var(--nbrOfGaps) * 0.05);
+                --gap-size: calc(var(--width) / var(--nbrOfGaps) * 0.02);
                 --letter-size: calc((var(--width) - var(--gap-size)) / var(--dimension));
 
 

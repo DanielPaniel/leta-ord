@@ -52,7 +52,7 @@
                 color: var(--foreground);
                 padding-block: 0;
                 padding-inline: 0;
-                width: min(80vw, 30em);
+                inline-size: min(80vw, 30em);
                 animation: none;
             }
             dialog[open] {
@@ -64,23 +64,28 @@
                 backdrop-filter: blur(10px);
             }
             .dialog-container {
+                box-sizing: border-box;
                 padding-block: 1em;
                 padding-inline: 2em;
                 border: 1px solid var(--foreground);
                 border-radius: .2em;
                 background: var(--background);
+                max-block-size: 90vh;
+                overflow: auto;
+
             }
             #menu {
                 display: flex;
                 flex-flow: row wrap;
                 gap: 1em;
             }
-            #menu a {
+            #menu button {
                 display: block;
                 font-family: var(--wf-font);
                 font-weight: normal;
                 font-size: 1em;
                 background: #fff3;
+                border: none;
                 color: var(--foreground);
                 text-transform: uppercase;
                 text-decoration: none;
@@ -223,7 +228,6 @@
                         let wordlistName = Object.keys(list)[0];
                         let listButton = document.createElement("button");
                         listButton.innerHTML = wordlistName;
-                        console.log(wordlistName);
                         listButton.addEventListener("click", () => {
                             resetGame();
                             dialog.close();
